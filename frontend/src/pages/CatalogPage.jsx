@@ -26,20 +26,22 @@ export default function CatalogPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">Справочник</h1>
-      <input
-        type="search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Поиск: бутылка, батарейка, газета…"
-        className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
-      />
+      <div className="space-y-4 desktop:flex desktop:items-center desktop:justify-between desktop:gap-6 desktop:space-y-0">
+        <h1 className="text-xl font-bold desktop:text-2xl">Справочник</h1>
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Поиск: бутылка, батарейка, газета…"
+          className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 desktop:max-w-sm"
+        />
+      </div>
       {categories.isPending && <Loader />}
       {categories.isError && <ErrorMessage error={categories.error} onRetry={() => categories.refetch()} />}
       {categories.isSuccess && categories.data.length === 0 && (
         <p className="py-8 text-center text-sm text-gray-500">Ничего не найдено. Попробуйте другое слово.</p>
       )}
-      <div className="space-y-2">
+      <div className="space-y-2 desktop:grid desktop:grid-cols-3 desktop:gap-3 desktop:space-y-0">
         {categories.data?.map((category) => (
           <CategoryCard key={category.slug} category={category} />
         ))}

@@ -59,7 +59,7 @@ export default function PhotoPicker({ onSelect, disabled }) {
         type="button"
         disabled={disabled}
         onClick={openCamera}
-        className={`${buttonClass} bg-emerald-600 text-white active:bg-emerald-700`}
+        className={`${buttonClass} bg-emerald-600 text-white active:bg-emerald-700 desktop:py-4 desktop:text-base desktop:hover:bg-emerald-700`}
       >
         <Camera className="h-6 w-6" aria-hidden /> Сфотографировать
       </button>
@@ -67,21 +67,22 @@ export default function PhotoPicker({ onSelect, disabled }) {
         type="button"
         disabled={disabled}
         onClick={openFiles}
-        className={`${buttonClass} border-2 border-emerald-600 bg-white text-emerald-700 active:bg-emerald-50`}
+        className={`${buttonClass} border-2 border-emerald-600 bg-white text-emerald-700 active:bg-emerald-50 desktop:py-4 desktop:text-base desktop:hover:bg-emerald-50`}
       >
         <FolderOpen className="h-6 w-6" aria-hidden /> Загрузить файл
       </button>
 
-      {/* Drag & drop is only useful with a mouse, so the zone is hidden on touch screens. */}
+      {/* Drag & drop is only useful with a mouse, so the zone is shown in the desktop layout only. */}
       <div
         {...dropProps}
         onClick={openFiles}
-        className={`hidden cursor-pointer flex-col items-center gap-1 rounded-2xl border-2 border-dashed p-5 text-center text-sm transition [@media(pointer:fine)]:flex ${
+        className={`hidden cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed bg-white p-5 text-center text-sm transition desktop:order-first desktop:flex desktop:py-12 desktop:hover:border-emerald-400 ${
           dragging ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-gray-300 text-gray-500'
         }`}
       >
-        <ImageUp className="h-7 w-7" aria-hidden />
-        Или перетащите фото сюда
+        <ImageUp className="h-10 w-10" aria-hidden />
+        <span className="font-medium text-gray-700">Перетащите фото сюда</span>
+        <span>или нажмите, чтобы выбрать файл · JPEG, PNG, WEBP до 10 МБ</span>
       </div>
 
       {error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
@@ -89,9 +90,7 @@ export default function PhotoPicker({ onSelect, disabled }) {
       <input ref={cameraInput} type="file" accept="image/*" capture="environment" hidden onChange={handleChange} />
       <input ref={fileInput} type="file" accept="image/*" hidden onChange={handleChange} />
 
-      {cameraOpen && (
-        <CameraCapture onCapture={select} onClose={() => setCameraOpen(false)} onPickFile={openFiles} />
-      )}
+      {cameraOpen && <CameraCapture onCapture={select} onClose={() => setCameraOpen(false)} onPickFile={openFiles} />}
     </div>
   )
 }

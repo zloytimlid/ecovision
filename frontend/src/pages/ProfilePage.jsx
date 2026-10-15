@@ -14,12 +14,12 @@ export default function ProfilePage() {
 
   if (!auth.isLoggedIn) {
     return (
-      <div className="space-y-4 pt-4 text-center">
+      <div className="space-y-4 pt-4 text-center desktop:mx-auto desktop:max-w-md desktop:py-6">
         <UserRound className="mx-auto h-12 w-12 text-emerald-600" aria-hidden />
         <h1 className="text-xl font-bold">Профиль</h1>
         <p className="text-sm text-gray-600">
-          Сейчас история хранится только на этом устройстве. Войдите, чтобы она сохранялась в аккаунте и была доступна
-          с любого телефона или компьютера.
+          Сейчас история хранится только на этом устройстве. Войдите, чтобы она сохранялась в аккаунте и была доступна с
+          любого телефона или компьютера.
         </p>
         <div className="grid gap-2">
           <Link to="/login" className="rounded-2xl bg-emerald-600 py-3.5 font-semibold text-white">
@@ -40,7 +40,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-4 pt-4">
+    <div className="space-y-4 pt-4 desktop:mx-auto desktop:max-w-md desktop:py-6">
       <div className="rounded-2xl bg-emerald-50 p-5 text-center">
         <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-white">
           <Leaf className="h-8 w-8" aria-hidden />

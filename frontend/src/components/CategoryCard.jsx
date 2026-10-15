@@ -6,7 +6,7 @@ export default function CategoryCard({ category }) {
   return (
     <Link
       to={`/catalog/${category.slug}`}
-      className="flex items-center gap-3 rounded-2xl border border-gray-200 p-3 active:bg-gray-50"
+      className="flex items-center gap-3 rounded-2xl border border-gray-200 p-3 transition active:bg-gray-50 desktop:hover:bg-gray-50 desktop:hover:shadow-sm"
       style={{ borderLeft: `6px solid ${category.bin_color}` }}
     >
       <span

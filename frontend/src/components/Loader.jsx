@@ -7,8 +7,6 @@ export default function Loader({ text = 'Загрузка…', overlay = false }
   )
   if (!overlay) return content
   return (
-    <div className="fixed inset-0 z-30 flex items-center justify-center bg-white/80 backdrop-blur-sm">
-      {content}
-    </div>
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-white/80 backdrop-blur-sm">{content}</div>
   )
 }

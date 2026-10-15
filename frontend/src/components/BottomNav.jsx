@@ -1,24 +1,12 @@
-import { BookOpen, Camera, History, UserRound } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
-
-const ITEMS = [
-  { to: '/', icon: Camera, label: 'Сканер', match: (path) => path === '/' || path.startsWith('/result') },
-  { to: '/history', icon: History, label: 'История', match: (path) => path.startsWith('/history') },
-  { to: '/catalog', icon: BookOpen, label: 'Справочник', match: (path) => path.startsWith('/catalog') },
-  {
-    to: '/profile',
-    icon: UserRound,
-    label: 'Профиль',
-    match: (path) => ['/profile', '/login', '/register'].includes(path),
-  },
-]
+import { NAV_ITEMS } from './navItems.js'
 
 export default function BottomNav() {
   const { pathname } = useLocation()
   return (
     <nav className="fixed inset-x-0 bottom-0 z-20 mx-auto max-w-[480px] border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
       <ul className="grid grid-cols-4">
-        {ITEMS.map((item) => {
+        {NAV_ITEMS.map((item) => {
           const active = item.match(pathname)
           return (
             <li key={item.to}>

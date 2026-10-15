@@ -37,22 +37,26 @@ export default function CategoryPage() {
       {query.isPending && <Loader />}
       {query.isError && <ErrorMessage error={query.error} />}
       {query.isSuccess && (
-        <>
-          <div
-            className="rounded-2xl p-5"
-            style={{ backgroundColor: query.data.bin_color, color: textColorOn(query.data.bin_color) }}
-          >
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/25">
-              <CategoryIcon slug={query.data.slug} className="h-8 w-8" />
-            </span>
-            <h1 className="mt-2 text-2xl font-bold">{query.data.name}</h1>
-            {query.data.description && <p className="mt-1 text-sm opacity-90">{query.data.description}</p>}
+        <div className="space-y-4 desktop:grid desktop:grid-cols-[340px_minmax(0,1fr)] desktop:items-start desktop:gap-8 desktop:space-y-0">
+          <div className="space-y-4 desktop:sticky desktop:top-24">
+            <div
+              className="rounded-2xl p-5 desktop:p-7"
+              style={{ backgroundColor: query.data.bin_color, color: textColorOn(query.data.bin_color) }}
+            >
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/25">
+                <CategoryIcon slug={query.data.slug} className="h-8 w-8" />
+              </span>
+              <h1 className="mt-2 text-2xl font-bold">{query.data.name}</h1>
+              {query.data.description && <p className="mt-1 text-sm opacity-90">{query.data.description}</p>}
+            </div>
+            {query.data.is_hazardous && <HazardBanner />}
           </div>
-          {query.data.is_hazardous && <HazardBanner />}
-          <CategoryDetails category={query.data} />
-          <Chips title="Примеры предметов" items={query.data.examples} />
-          <Chips title="Модель распознаёт" items={query.data.items} />
-        </>
+          <div className="space-y-4">
+            <CategoryDetails category={query.data} />
+            <Chips title="Примеры предметов" items={query.data.examples} />
+            <Chips title="Модель распознаёт" items={query.data.items} />
+          </div>
+        </div>
       )}
     </div>
   )

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* `desktop:` classes apply only in the desktop layout chosen by useDevice(). */
+@custom-variant desktop (&:where([data-layout="desktop"], [data-layout="desktop"] *));
+
 html {
   -webkit-tap-highlight-color: transparent;
 }

@@ -17,7 +17,7 @@ const dateFormat = new Intl.DateTimeFormat('ru-RU', {
 export default function HistoryItem({ item, onDelete, deleting }) {
   const title = item.category ? item.category.name : STATUS_LABELS[item.status] || item.top_class
   return (
-    <li className="flex items-center gap-3 rounded-2xl border border-gray-200 p-2.5">
+    <li className="flex items-center gap-3 rounded-2xl border border-gray-200 p-2.5 transition desktop:hover:shadow-sm">
       <Link to={`/result/${item.id}`} className="flex min-w-0 flex-1 items-center gap-3">
         <img
           src={item.image_url}
@@ -54,7 +54,7 @@ export default function HistoryItem({ item, onDelete, deleting }) {
         onClick={() => onDelete(item)}
         disabled={deleting}
         aria-label="Удалить запись"
-        className="rounded-lg p-2 text-gray-400 active:bg-red-50 active:text-red-600 disabled:opacity-40"
+        className="rounded-lg p-2 text-gray-400 active:bg-red-50 active:text-red-600 disabled:opacity-40 desktop:hover:bg-red-50 desktop:hover:text-red-600"
       >
         <Trash2 className="h-5 w-5" aria-hidden />
       </button>

@@ -15,7 +15,9 @@ export default function FeedbackForm({ feedback, onSubmit, isPending, error }) {
       <div className="rounded-xl bg-emerald-50 p-4 text-sm text-emerald-900">
         <p className="font-semibold">Спасибо! Оценка сохранена.</p>
         <p className="mt-1">
-          {feedback.is_correct ? 'Вы отметили результат как верный.' : `Правильная категория: ${picked?.name || feedback.correct_category}.`}
+          {feedback.is_correct
+            ? 'Вы отметили результат как верный.'
+            : `Правильная категория: ${picked?.name || feedback.correct_category}.`}
         </p>
         <button type="button" onClick={() => setMode('wrong')} className="mt-2 font-medium text-emerald-700 underline">
           Изменить оценку

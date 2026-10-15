@@ -51,7 +51,7 @@ export default function AuthPage({ mode }) {
     'mt-1 w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200'
 
   return (
-    <div className="space-y-5 pt-4">
+    <div className="space-y-5 pt-4 desktop:mx-auto desktop:max-w-md desktop:py-6">
       <div className="text-center">
         <UserRound className="mx-auto h-10 w-10 text-emerald-600" aria-hidden />
         <h1 className="mt-2 text-xl font-bold">{text.title}</h1>

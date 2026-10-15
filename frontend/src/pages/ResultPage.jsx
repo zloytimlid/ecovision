@@ -34,35 +34,39 @@ export default function ResultPage() {
   const pickAlternative = (slug) => submitFeedback({ is_correct: false, correct_category: slug })
 
   return (
-    <div className="space-y-4">
-      <ImagePreview src={recognition.image_url}>
-        <BoundingBoxOverlay objects={recognition.objects} imageSize={recognition.image_size} />
-      </ImagePreview>
+    <div className="space-y-4 desktop:grid desktop:grid-cols-2 desktop:items-start desktop:gap-8 desktop:space-y-0">
+      <div className="desktop:sticky desktop:top-24">
+        <ImagePreview src={recognition.image_url}>
+          <BoundingBoxOverlay objects={recognition.objects} imageSize={recognition.image_size} />
+        </ImagePreview>
+      </div>
 
-      {recognition.has_hazardous && <HazardBanner />}
+      <div className="space-y-4">
+        {recognition.has_hazardous && <HazardBanner />}
 
-      <ResultCard
-        recognition={recognition}
-        onRetry={() => navigate('/')}
-        onPickAlternative={pickAlternative}
-        feedbackSlug={recognition.feedback?.correct_category}
-        feedbackPending={feedback.isPending}
-      />
+        <ResultCard
+          recognition={recognition}
+          onRetry={() => navigate('/')}
+          onPickAlternative={pickAlternative}
+          feedbackSlug={recognition.feedback?.correct_category}
+          feedbackPending={feedback.isPending}
+        />
 
-      <FeedbackForm
-        feedback={recognition.feedback}
-        onSubmit={submitFeedback}
-        isPending={feedback.isPending}
-        error={feedback.error}
-      />
+        <FeedbackForm
+          feedback={recognition.feedback}
+          onSubmit={submitFeedback}
+          isPending={feedback.isPending}
+          error={feedback.error}
+        />
 
-      <button
-        type="button"
-        onClick={() => navigate('/')}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-lg font-semibold text-white shadow-sm active:bg-emerald-700"
-      >
-        <Camera className="h-5 w-5" aria-hidden /> Сфотографировать ещё
-      </button>
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-lg font-semibold text-white shadow-sm active:bg-emerald-700 desktop:hover:bg-emerald-700"
+        >
+          <Camera className="h-5 w-5" aria-hidden /> Сфотографировать ещё
+        </button>
+      </div>
     </div>
   )
 }

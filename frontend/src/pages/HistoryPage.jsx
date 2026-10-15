@@ -32,7 +32,7 @@ export default function HistoryPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">История</h1>
+      <h1 className="text-xl font-bold desktop:text-2xl">История</h1>
       {!isLoggedIn && (
         <p className="rounded-xl bg-gray-50 p-3 text-sm text-gray-600">
           История хранится на этом устройстве.{' '}
@@ -51,13 +51,16 @@ export default function HistoryPage() {
           <FolderOpen className="mx-auto h-10 w-10 text-gray-400" aria-hidden />
           <p className="mt-2 font-semibold">Пока пусто</p>
           <p className="mt-1 text-sm text-gray-600">Здесь появятся ваши распознавания.</p>
-          <Link to="/" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 font-semibold text-white">
+          <Link
+            to="/"
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 font-semibold text-white"
+          >
             <Camera className="h-5 w-5" aria-hidden /> Сфотографировать
           </Link>
         </div>
       )}
 
-      <ul className="space-y-2">
+      <ul className="space-y-2 desktop:grid desktop:grid-cols-2 desktop:gap-3 desktop:space-y-0">
         {items.map((item) => (
           <HistoryItem key={item.id} item={item} onDelete={handleDelete} deleting={removal.isPending} />
         ))}
@@ -68,7 +71,7 @@ export default function HistoryPage() {
           type="button"
           onClick={() => query.fetchNextPage()}
           disabled={query.isFetchingNextPage}
-          className="w-full rounded-xl border border-gray-300 py-2.5 font-medium text-gray-700 disabled:opacity-50"
+          className="w-full rounded-xl border border-gray-300 py-2.5 font-medium text-gray-700 disabled:opacity-50 desktop:mx-auto desktop:block desktop:w-64 desktop:hover:bg-gray-50"
         >
           {query.isFetchingNextPage ? 'Загрузка…' : 'Показать ещё'}
         </button>
