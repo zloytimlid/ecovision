@@ -1,3 +1,5 @@
+import { ChevronLeft } from 'lucide-react'
+import CategoryIcon from '../components/CategoryIcon.jsx'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { getCategory } from '../api/categories.js'
@@ -29,8 +31,8 @@ export default function CategoryPage() {
 
   return (
     <div className="space-y-4">
-      <Link to="/catalog" className="text-sm font-medium text-emerald-700">
-        ‹ Справочник
+      <Link to="/catalog" className="inline-flex items-center gap-1 text-sm font-medium text-emerald-700">
+        <ChevronLeft className="h-4 w-4" aria-hidden /> Справочник
       </Link>
       {query.isPending && <Loader />}
       {query.isError && <ErrorMessage error={query.error} />}
@@ -40,9 +42,9 @@ export default function CategoryPage() {
             className="rounded-2xl p-5"
             style={{ backgroundColor: query.data.bin_color, color: textColorOn(query.data.bin_color) }}
           >
-            <p className="text-4xl" aria-hidden>
-              {query.data.icon}
-            </p>
+            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/25">
+              <CategoryIcon slug={query.data.slug} className="h-8 w-8" />
+            </span>
             <h1 className="mt-2 text-2xl font-bold">{query.data.name}</h1>
             {query.data.description && <p className="mt-1 text-sm opacity-90">{query.data.description}</p>}
           </div>

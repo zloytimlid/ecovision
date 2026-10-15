@@ -1,3 +1,5 @@
+import { Trash2 } from 'lucide-react'
+import CategoryIcon from './CategoryIcon.jsx'
 import { Link } from 'react-router-dom'
 
 const STATUS_LABELS = {
@@ -24,8 +26,15 @@ export default function HistoryItem({ item, onDelete, deleting }) {
           className="h-16 w-16 shrink-0 rounded-xl bg-gray-100 object-cover"
         />
         <div className="min-w-0">
-          <p className="truncate font-semibold">
-            {item.category?.icon} {title}
+          <p className="flex items-center gap-1.5 font-semibold">
+            {item.category && (
+              <CategoryIcon
+                slug={item.category.slug}
+                className="h-4 w-4 shrink-0"
+                style={{ color: item.category.bin_color }}
+              />
+            )}
+            <span className="truncate">{title}</span>
           </p>
           <p className="text-xs text-gray-500">
             {dateFormat.format(new Date(item.created_at))}
@@ -45,9 +54,9 @@ export default function HistoryItem({ item, onDelete, deleting }) {
         onClick={() => onDelete(item)}
         disabled={deleting}
         aria-label="Удалить запись"
-        className="rounded-lg p-2 text-xl text-gray-400 active:bg-red-50 active:text-red-600 disabled:opacity-40"
+        className="rounded-lg p-2 text-gray-400 active:bg-red-50 active:text-red-600 disabled:opacity-40"
       >
-        🗑
+        <Trash2 className="h-5 w-5" aria-hidden />
       </button>
     </li>
   )

@@ -1,3 +1,4 @@
+import { Camera, FolderOpen } from 'lucide-react'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { deleteRecognition, listRecognitions } from '../api/recognitions.js'
@@ -47,13 +48,11 @@ export default function HistoryPage() {
 
       {query.isSuccess && items.length === 0 && (
         <div className="rounded-2xl border border-dashed border-gray-300 p-8 text-center">
-          <p className="text-4xl" aria-hidden>
-            🗂
-          </p>
+          <FolderOpen className="mx-auto h-10 w-10 text-gray-400" aria-hidden />
           <p className="mt-2 font-semibold">Пока пусто</p>
           <p className="mt-1 text-sm text-gray-600">Здесь появятся ваши распознавания.</p>
-          <Link to="/" className="mt-4 inline-block rounded-xl bg-emerald-600 px-5 py-2.5 font-semibold text-white">
-            📷 Сфотографировать
+          <Link to="/" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 font-semibold text-white">
+            <Camera className="h-5 w-5" aria-hidden /> Сфотографировать
           </Link>
         </div>
       )}

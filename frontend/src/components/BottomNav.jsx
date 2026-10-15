@@ -1,12 +1,13 @@
+import { BookOpen, Camera, History, UserRound } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 
 const ITEMS = [
-  { to: '/', icon: '📷', label: 'Сканер', match: (path) => path === '/' || path.startsWith('/result') },
-  { to: '/history', icon: '🕘', label: 'История', match: (path) => path.startsWith('/history') },
-  { to: '/catalog', icon: '📚', label: 'Справочник', match: (path) => path.startsWith('/catalog') },
+  { to: '/', icon: Camera, label: 'Сканер', match: (path) => path === '/' || path.startsWith('/result') },
+  { to: '/history', icon: History, label: 'История', match: (path) => path.startsWith('/history') },
+  { to: '/catalog', icon: BookOpen, label: 'Справочник', match: (path) => path.startsWith('/catalog') },
   {
     to: '/profile',
-    icon: '👤',
+    icon: UserRound,
     label: 'Профиль',
     match: (path) => ['/profile', '/login', '/register'].includes(path),
   },
@@ -27,9 +28,7 @@ export default function BottomNav() {
                   active ? 'text-emerald-700' : 'text-gray-500'
                 }`}
               >
-                <span className="text-xl leading-none" aria-hidden>
-                  {item.icon}
-                </span>
+                <item.icon className="h-6 w-6" strokeWidth={active ? 2.25 : 1.75} aria-hidden />
                 {item.label}
               </NavLink>
             </li>

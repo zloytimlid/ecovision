@@ -1,3 +1,4 @@
+import { UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import ErrorMessage from '../components/ErrorMessage.jsx'
@@ -52,9 +53,7 @@ export default function AuthPage({ mode }) {
   return (
     <div className="space-y-5 pt-4">
       <div className="text-center">
-        <p className="text-4xl" aria-hidden>
-          👤
-        </p>
+        <UserRound className="mx-auto h-10 w-10 text-emerald-600" aria-hidden />
         <h1 className="mt-2 text-xl font-bold">{text.title}</h1>
         <p className="mt-1 text-sm text-gray-600">История распознаваний будет доступна на всех ваших устройствах.</p>
       </div>

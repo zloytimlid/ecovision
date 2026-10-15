@@ -1,3 +1,4 @@
+import CategoryIcon from './CategoryIcon.jsx'
 import { useAllCategories } from '../api/categories.js'
 
 const FALLBACK_COLOR = '#6b7280'
@@ -33,10 +34,10 @@ export default function BoundingBoxOverlay({ objects, imageSize }) {
             }}
           >
             <span
-              className="absolute -top-0.5 left-0 -translate-y-full rounded px-1.5 py-0.5 text-xs font-semibold whitespace-nowrap text-white"
+              className="absolute -top-0.5 left-0 flex -translate-y-full items-center gap-1 rounded px-1.5 py-0.5 text-xs font-semibold whitespace-nowrap text-white"
               style={{ backgroundColor: color }}
             >
-              {category?.icon} {category?.name || obj.model_class} · {Math.round(obj.confidence * 100)}%
+              <CategoryIcon slug={obj.category_slug} className="h-3.5 w-3.5" /> {category?.name || obj.model_class} · {Math.round(obj.confidence * 100)}%
             </span>
           </div>
         )

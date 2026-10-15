@@ -1,3 +1,4 @@
+import { Leaf, LogOut, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Loader from '../components/Loader.jsx'
@@ -14,9 +15,7 @@ export default function ProfilePage() {
   if (!auth.isLoggedIn) {
     return (
       <div className="space-y-4 pt-4 text-center">
-        <p className="text-5xl" aria-hidden>
-          👤
-        </p>
+        <UserRound className="mx-auto h-12 w-12 text-emerald-600" aria-hidden />
         <h1 className="text-xl font-bold">Профиль</h1>
         <p className="text-sm text-gray-600">
           Сейчас история хранится только на этом устройстве. Войдите, чтобы она сохранялась в аккаунте и была доступна
@@ -43,9 +42,9 @@ export default function ProfilePage() {
   return (
     <div className="space-y-4 pt-4">
       <div className="rounded-2xl bg-emerald-50 p-5 text-center">
-        <p className="text-5xl" aria-hidden>
-          🌿
-        </p>
+        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-white">
+          <Leaf className="h-8 w-8" aria-hidden />
+        </span>
         <h1 className="mt-2 text-xl font-bold">{auth.user?.username}</h1>
         {auth.user && (
           <p className="mt-1 text-sm text-gray-600">С нами с {dateFormat.format(new Date(auth.user.date_joined))}</p>
@@ -61,8 +60,9 @@ export default function ProfilePage() {
         type="button"
         onClick={logout}
         disabled={leaving}
-        className="w-full rounded-2xl border border-gray-300 py-3 font-medium text-gray-700 disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-300 py-3 font-medium text-gray-700 disabled:opacity-50"
       >
+        <LogOut className="h-4 w-4" aria-hidden />
         {leaving ? 'Выходим…' : 'Выйти'}
       </button>
     </div>

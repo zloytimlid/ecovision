@@ -1,3 +1,4 @@
+import { Recycle, Search } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -52,9 +53,9 @@ export default function HomePage() {
   return (
     <div className="space-y-5">
       <header className="pt-2 text-center">
-        <p className="text-5xl" aria-hidden>
-          ♻️
-        </p>
+        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-sm">
+          <Recycle className="h-9 w-9" aria-hidden />
+        </span>
         <h1 className="mt-2 text-2xl font-bold text-emerald-800">EcoVision</h1>
         <p className="mt-1 text-sm text-gray-600">
           Сфотографируйте предмет — подскажем, что это за отход и куда его выбросить.
@@ -69,9 +70,10 @@ export default function HomePage() {
             type="button"
             disabled={mutation.isPending}
             onClick={() => mutation.mutate(file)}
-            className="w-full rounded-2xl bg-emerald-600 py-4 text-lg font-semibold text-white shadow-sm active:bg-emerald-700 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-lg font-semibold text-white shadow-sm active:bg-emerald-700 disabled:opacity-50"
           >
-            {mutation.isPending ? 'Анализируем…' : '🔍 Определить'}
+            <Search className="h-5 w-5" aria-hidden />
+            {mutation.isPending ? 'Анализируем…' : 'Определить'}
           </button>
           <button
             type="button"

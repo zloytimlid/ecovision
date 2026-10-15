@@ -1,3 +1,4 @@
+import { Camera, Image } from 'lucide-react'
 import { useRef } from 'react'
 
 export default function PhotoPicker({ onSelect, disabled }) {
@@ -21,7 +22,7 @@ export default function PhotoPicker({ onSelect, disabled }) {
         onClick={() => cameraInput.current?.click()}
         className={`${buttonClass} bg-emerald-600 text-white active:bg-emerald-700`}
       >
-        <span className="text-2xl" aria-hidden>📷</span> Сфотографировать
+        <Camera className="h-6 w-6" aria-hidden /> Сфотографировать
       </button>
       <button
         type="button"
@@ -29,7 +30,7 @@ export default function PhotoPicker({ onSelect, disabled }) {
         onClick={() => galleryInput.current?.click()}
         className={`${buttonClass} border-2 border-emerald-600 bg-white text-emerald-700 active:bg-emerald-50`}
       >
-        <span className="text-2xl" aria-hidden>🖼</span> Выбрать из галереи
+        <Image className="h-6 w-6" aria-hidden /> Выбрать из галереи
       </button>
       <input ref={cameraInput} type="file" accept="image/*" capture="environment" hidden onChange={handleChange} />
       <input ref={galleryInput} type="file" accept="image/*" hidden onChange={handleChange} />

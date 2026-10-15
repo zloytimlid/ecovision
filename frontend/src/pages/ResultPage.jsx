@@ -1,3 +1,4 @@
+import { Camera } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getRecognition } from '../api/recognitions.js'
@@ -58,9 +59,9 @@ export default function ResultPage() {
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="w-full rounded-2xl bg-emerald-600 py-4 text-lg font-semibold text-white shadow-sm active:bg-emerald-700"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-lg font-semibold text-white shadow-sm active:bg-emerald-700"
       >
-        📷 Сфотографировать ещё
+        <Camera className="h-5 w-5" aria-hidden /> Сфотографировать ещё
       </button>
     </div>
   )

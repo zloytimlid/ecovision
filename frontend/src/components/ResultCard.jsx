@@ -1,3 +1,5 @@
+import { Check, PackageX, ScanSearch, X } from 'lucide-react'
+import CategoryIcon from './CategoryIcon.jsx'
 import { Link } from 'react-router-dom'
 import { textColorOn } from '../utils/color.js'
 import AlternativesList from './AlternativesList.jsx'
@@ -7,7 +9,7 @@ import ConfidenceBar from './ConfidenceBar.jsx'
 function NotFound({ onRetry }) {
   return (
     <div className="rounded-2xl border border-gray-200 p-5">
-      <p className="text-3xl" aria-hidden>🤔</p>
+      <ScanSearch className="h-9 w-9 text-gray-400" aria-hidden />
       <h2 className="mt-2 text-lg font-bold">Не удалось распознать предмет</h2>
       <p className="mt-2 text-sm text-gray-600">Попробуйте сфотографировать ещё раз:</p>
       <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-gray-700">
@@ -29,7 +31,7 @@ function NotFound({ onRetry }) {
 function Unmapped({ modelClass }) {
   return (
     <div className="rounded-2xl border border-gray-200 p-5">
-      <p className="text-3xl" aria-hidden>📦</p>
+      <PackageX className="h-9 w-9 text-gray-400" aria-hidden />
       <h2 className="mt-2 text-lg font-bold">Предмет распознан как «{modelClass}», но для него нет правил</h2>
       <p className="mt-2 text-sm text-gray-600">Найдите подходящую категорию вручную.</p>
       <Link to="/catalog" className="mt-3 inline-block font-medium text-emerald-700 underline">
@@ -39,7 +41,7 @@ function Unmapped({ modelClass }) {
   )
 }
 
-function ListBlock({ title, items, marker, markerClass }) {
+function ListBlock({ title, items, icon: Icon, iconClass }) {
   if (!items?.length) return null
   return (
     <div>
@@ -47,9 +49,7 @@ function ListBlock({ title, items, marker, markerClass }) {
       <ul className="space-y-1">
         {items.map((item) => (
           <li key={item} className="flex gap-2 text-sm text-gray-700">
-            <span className={`font-bold ${markerClass}`} aria-hidden>
-              {marker}
-            </span>
+            <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${iconClass}`} strokeWidth={2.5} aria-hidden />
             {item}
           </li>
         ))}
@@ -62,8 +62,8 @@ export function CategoryDetails({ category }) {
   return (
     <>
       <BinBadge color={category.bin_color} name={category.bin_name} />
-      <ListBlock title="Как подготовить" items={category.preparation_steps} marker="✓" markerClass="text-emerald-600" />
-      <ListBlock title="Нельзя" items={category.do_not} marker="✕" markerClass="text-red-600" />
+      <ListBlock title="Как подготовить" items={category.preparation_steps} icon={Check} iconClass="text-emerald-600" />
+      <ListBlock title="Нельзя" items={category.do_not} icon={X} iconClass="text-red-600" />
     </>
   )
 }
@@ -80,8 +80,8 @@ export default function ResultCard({ recognition, onRetry, onPickAlternative, fe
     <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
       <div className="p-4" style={{ backgroundColor: category.bin_color, color: textColorOn(category.bin_color) }}>
         <div className="flex items-center gap-3">
-          <span className="text-4xl" aria-hidden>
-            {category.icon}
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/25">
+            <CategoryIcon slug={category.slug} className="h-8 w-8" />
           </span>
           <div>
             <p className="text-xs opacity-80">

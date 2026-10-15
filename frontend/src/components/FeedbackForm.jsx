@@ -1,3 +1,4 @@
+import { ThumbsDown, ThumbsUp } from 'lucide-react'
 import { useState } from 'react'
 import { useAllCategories } from '../api/categories.js'
 import ErrorMessage from './ErrorMessage.jsx'
@@ -36,19 +37,19 @@ export default function FeedbackForm({ feedback, onSubmit, isPending, error }) {
           type="button"
           disabled={isPending}
           onClick={() => onSubmit({ is_correct: true }, () => setMode(null))}
-          className="rounded-xl border border-emerald-600 py-2.5 font-medium text-emerald-700 active:bg-emerald-50 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-xl border border-emerald-600 py-2.5 font-medium text-emerald-700 active:bg-emerald-50 disabled:opacity-50"
         >
-          👍 Да
+          <ThumbsUp className="h-4 w-4" aria-hidden /> Да
         </button>
         <button
           type="button"
           disabled={isPending}
           onClick={() => setMode('wrong')}
-          className={`rounded-xl border py-2.5 font-medium disabled:opacity-50 ${
+          className={`flex items-center justify-center gap-2 rounded-xl border py-2.5 font-medium disabled:opacity-50 ${
             mode === 'wrong' ? 'border-red-600 bg-red-50 text-red-700' : 'border-gray-300 text-gray-700'
           }`}
         >
-          👎 Нет
+          <ThumbsDown className="h-4 w-4" aria-hidden /> Нет
         </button>
       </div>
 
@@ -65,7 +66,7 @@ export default function FeedbackForm({ feedback, onSubmit, isPending, error }) {
               <option value="">Выберите…</option>
               {categories.map((c) => (
                 <option key={c.slug} value={c.slug}>
-                  {c.icon} {c.name}
+                  {c.name}
                 </option>
               ))}
             </select>
