@@ -61,7 +61,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
+    "accounts",
     "catalog",
     "recognition",
 ]
@@ -136,13 +138,17 @@ CORS_ALLOW_HEADERS = (*default_headers, "x-client-id")
 # --- Django REST Framework --------------------------------------------------
 
 REST_FRAMEWORK = {
-    # The API is anonymous: clients are identified by the X-Client-Id header.
-    "DEFAULT_AUTHENTICATION_CLASSES": [],
+    # Accounts are optional: requests carry "Authorization: Token <key>" when the
+    # user is logged in; anonymous devices are identified by the X-Client-Id header.
+    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.TokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
     "EXCEPTION_HANDLER": "config.exceptions.api_exception_handler",
-    "DEFAULT_THROTTLE_RATES": {"recognize": env_str("RECOGNIZE_RATE", "30/min")},
+    "DEFAULT_THROTTLE_RATES": {
+        "recognize": env_str("RECOGNIZE_RATE", "30/min"),
+        "auth": env_str("AUTH_RATE", "10/min"),
+    },
 }
 
 # --- Roboflow ---------------------------------------------------------------

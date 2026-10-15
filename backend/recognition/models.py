@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -15,6 +16,15 @@ class Recognition(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     client_id = models.UUIDField("ID устройства", db_index=True)
+    # Set when the photo was taken by a logged-in user, or claimed at login.
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="recognitions",
+        verbose_name="Пользователь",
+    )
     image = models.ImageField("Фото", upload_to="recognitions/%Y/%m/")
     image_width = models.PositiveIntegerField("Ширина, px")
     image_height = models.PositiveIntegerField("Высота, px")

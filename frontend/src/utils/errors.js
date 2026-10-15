@@ -6,6 +6,8 @@ const MESSAGES = {
   model_unavailable: 'Сервис распознавания временно недоступен. Попробуйте позже.',
   model_timeout: 'Распознавание заняло слишком много времени. Попробуйте ещё раз.',
   not_found: 'Запись не найдена — возможно, она была удалена.',
+  not_authenticated: 'Войдите в аккаунт.',
+  authentication_failed: 'Сессия истекла — войдите снова.',
 }
 
 /** Human-readable Russian message for an API / network / local error. */

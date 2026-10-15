@@ -4,9 +4,11 @@ import { deleteRecognition, listRecognitions } from '../api/recognitions.js'
 import ErrorMessage from '../components/ErrorMessage.jsx'
 import HistoryItem from '../components/HistoryItem.jsx'
 import Loader from '../components/Loader.jsx'
+import useAuth from '../hooks/useAuth.jsx'
 
 export default function HistoryPage() {
   const queryClient = useQueryClient()
+  const { isLoggedIn } = useAuth()
   const query = useInfiniteQuery({
     queryKey: ['recognitions'],
     queryFn: ({ pageParam }) => listRecognitions(pageParam),
@@ -30,6 +32,15 @@ export default function HistoryPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-bold">История</h1>
+      {!isLoggedIn && (
+        <p className="rounded-xl bg-gray-50 p-3 text-sm text-gray-600">
+          История хранится на этом устройстве.{' '}
+          <Link to="/login" className="font-medium text-emerald-700 underline">
+            Войдите
+          </Link>
+          , чтобы она сохранялась в аккаунте.
+        </p>
+      )}
       {query.isPending && <Loader />}
       {query.isError && <ErrorMessage error={query.error} onRetry={() => query.refetch()} />}
       {removal.isError && <ErrorMessage error={removal.error} />}

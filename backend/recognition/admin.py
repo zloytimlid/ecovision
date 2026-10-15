@@ -41,6 +41,7 @@ class RecognitionAdmin(admin.ModelAdmin):
     list_display = (
         "thumbnail",
         "created_at",
+        "user",
         "status",
         "category",
         "top_class",
@@ -49,12 +50,13 @@ class RecognitionAdmin(admin.ModelAdmin):
         "feedback_display",
     )
     list_filter = ("status", "category", "created_at")
-    list_select_related = ("category", "feedback")
-    search_fields = ("id", "client_id", "top_class")
+    list_select_related = ("category", "feedback", "user")
+    search_fields = ("id", "client_id", "top_class", "user__username")
     date_hierarchy = "created_at"
     readonly_fields = (
         "id",
         "client_id",
+        "user",
         "image_preview",
         "image",
         "image_width",

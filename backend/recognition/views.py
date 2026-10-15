@@ -39,10 +39,17 @@ class RecognitionViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    """History of the current client: only records with its own X-Client-Id are visible."""
+    """
+    History of the current user (any device) or, for anonymous requests, of the
+    current device; records already claimed by an account are not visible anonymously.
+    """
 
     def get_queryset(self):
-        return recognition_queryset().filter(client_id=get_client_id(self.request))
+        if self.request.user.is_authenticated:
+            return recognition_queryset().filter(user=self.request.user)
+        return recognition_queryset().filter(
+            client_id=get_client_id(self.request), user__isnull=True
+        )
 
     def get_serializer_class(self):
         return RecognitionListSerializer if self.action == "list" else RecognitionSerializer
@@ -105,7 +112,8 @@ class RecognizeView(APIView):
             inference_ms,
         )
 
-        recognition = self._save(client_id, image, raw, inference_ms, analysis)
+        user = request.user if request.user.is_authenticated else None
+        recognition = self._save(client_id, user, image, raw, inference_ms, analysis)
         serializer = RecognitionSerializer(
             recognition_queryset().get(pk=recognition.pk),
             context={"request": request, "mapping": mapping},
@@ -113,9 +121,10 @@ class RecognizeView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @staticmethod
-    def _save(client_id, image, raw, inference_ms, analysis):
+    def _save(client_id, user, image, raw, inference_ms, analysis):
         recognition = Recognition(
             client_id=client_id,
+            user=user,
             image_width=image.width,
             image_height=image.height,
             status=analysis.status,

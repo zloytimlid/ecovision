@@ -4,13 +4,19 @@ const ITEMS = [
   { to: '/', icon: '📷', label: 'Сканер', match: (path) => path === '/' || path.startsWith('/result') },
   { to: '/history', icon: '🕘', label: 'История', match: (path) => path.startsWith('/history') },
   { to: '/catalog', icon: '📚', label: 'Справочник', match: (path) => path.startsWith('/catalog') },
+  {
+    to: '/profile',
+    icon: '👤',
+    label: 'Профиль',
+    match: (path) => ['/profile', '/login', '/register'].includes(path),
+  },
 ]
 
 export default function BottomNav() {
   const { pathname } = useLocation()
   return (
     <nav className="fixed inset-x-0 bottom-0 z-20 mx-auto max-w-[480px] border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-      <ul className="grid grid-cols-3">
+      <ul className="grid grid-cols-4">
         {ITEMS.map((item) => {
           const active = item.match(pathname)
           return (

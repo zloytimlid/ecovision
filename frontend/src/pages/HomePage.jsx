@@ -32,6 +32,7 @@ export default function HomePage() {
     onSuccess: (data) => {
       queryClient.setQueryData(['recognition', data.id], data)
       queryClient.invalidateQueries({ queryKey: ['recognitions'] })
+      queryClient.invalidateQueries({ queryKey: ['me'] })
       navigate(`/result/${data.id}`)
     },
   })
