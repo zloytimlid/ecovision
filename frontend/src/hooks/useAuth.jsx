@@ -26,6 +26,12 @@ export function AuthProvider({ children }) {
     [queryClient],
   )
 
+  // Store fresh user data from a settings response, keeping fields only GET /me returns.
+  const updateUser = useCallback(
+    (user) => queryClient.setQueryData(['me', token], (old) => ({ ...old, ...user })),
+    [queryClient, token],
+  )
+
   useEffect(() => {
     const onRejected = () => switchToken(null)
     window.addEventListener(TOKEN_REJECTED_EVENT, onRejected)
@@ -34,7 +40,7 @@ export function AuthProvider({ children }) {
 
   const value = useMemo(
     () => ({
-      user: token ? me.data ?? null : null,
+      user: token ? (me.data ?? null) : null,
       isLoggedIn: Boolean(token),
       isLoading: Boolean(token) && me.isPending,
       async login(username, password) {
@@ -55,8 +61,29 @@ export function AuthProvider({ children }) {
         }
         switchToken(null)
       },
+      async updateProfile(payload) {
+        updateUser(await authApi.updateMe(payload))
+      },
+      async uploadAvatar(blob) {
+        updateUser(await authApi.uploadAvatar(blob))
+      },
+      async deleteAvatar() {
+        updateUser(await authApi.deleteAvatar())
+      },
+      async changePassword(currentPassword, newPassword) {
+        const newToken = await authApi.changePassword(currentPassword, newPassword)
+        // Same user, so cached data stays valid: only the stored token changes.
+        const current = queryClient.getQueryData(['me', token])
+        setToken(newToken)
+        queryClient.setQueryData(['me', newToken], current)
+        setTokenState(newToken)
+      },
+      async deleteAccount(password) {
+        await authApi.deleteAccount(password)
+        switchToken(null)
+      },
     }),
-    [token, me.data, me.isPending, switchToken],
+    [token, me.data, me.isPending, switchToken, updateUser, queryClient],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -1,6 +1,7 @@
 import { Recycle } from 'lucide-react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import useAuth from '../hooks/useAuth.jsx'
+import Avatar from './Avatar.jsx'
 import { NAV_ITEMS } from './navItems.js'
 
 /** Header navigation for the desktop layout. */
@@ -30,7 +31,11 @@ export default function TopNav() {
                       active ? 'bg-emerald-50 text-emerald-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                     }`}
                   >
-                    <item.icon className="h-4.5 w-4.5" aria-hidden />
+                    {item.to === '/profile' && user ? (
+                      <Avatar user={user} size="h-6 w-6" textSize="text-xs" />
+                    ) : (
+                      <item.icon className="h-4.5 w-4.5" aria-hidden />
+                    )}
                     {label}
                   </NavLink>
                 </li>

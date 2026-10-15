@@ -8,6 +8,6 @@ export const NAV_ITEMS = [
     to: '/profile',
     icon: UserRound,
     label: 'Профиль',
-    match: (path) => ['/profile', '/login', '/register'].includes(path),
+    match: (path) => ['/profile', '/settings', '/login', '/register'].includes(path),
   },
 ]

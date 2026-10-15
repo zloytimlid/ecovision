@@ -1,6 +1,7 @@
-import { Leaf, LogOut, UserRound } from 'lucide-react'
+import { ChevronRight, LogOut, Settings, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import Avatar from '../components/Avatar.jsx'
 import Loader from '../components/Loader.jsx'
 import useAuth from '../hooks/useAuth.jsx'
 
@@ -42,10 +43,11 @@ export default function ProfilePage() {
   return (
     <div className="space-y-4 pt-4 desktop:mx-auto desktop:max-w-md desktop:py-6">
       <div className="rounded-2xl bg-emerald-50 p-5 text-center">
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-white">
-          <Leaf className="h-8 w-8" aria-hidden />
-        </span>
+        <div className="flex justify-center">
+          <Avatar user={auth.user} size="h-20 w-20" textSize="text-3xl" />
+        </div>
         <h1 className="mt-2 text-xl font-bold">{auth.user?.username}</h1>
+        {auth.user?.email && <p className="text-sm text-gray-600">{auth.user.email}</p>}
         {auth.user && (
           <p className="mt-1 text-sm text-gray-600">С нами с {dateFormat.format(new Date(auth.user.date_joined))}</p>
         )}
@@ -56,6 +58,15 @@ export default function ProfilePage() {
           <span className="text-xl font-bold text-emerald-700">{auth.user.recognitions_count}</span>
         </Link>
       )}
+      <Link
+        to="/settings"
+        className="flex items-center justify-between rounded-2xl border border-gray-200 p-4 desktop:hover:bg-gray-50"
+      >
+        <span className="flex items-center gap-2 font-medium">
+          <Settings className="h-5 w-5 text-gray-500" aria-hidden /> Настройки
+        </span>
+        <ChevronRight className="h-5 w-5 text-gray-400" aria-hidden />
+      </Link>
       <button
         type="button"
         onClick={logout}

@@ -10,6 +10,7 @@ import HomePage from './pages/HomePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import ResultPage from './pages/ResultPage.jsx'
+import SettingsPage from './pages/SettingsPage.jsx'
 
 function AppRoutes() {
   return (
@@ -20,6 +21,7 @@ function AppRoutes() {
       <Route path="/catalog" element={<CatalogPage />} />
       <Route path="/catalog/:slug" element={<CategoryPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="/login" element={<AuthPage mode="login" />} />
       <Route path="/register" element={<AuthPage mode="register" />} />
       <Route path="*" element={<NotFoundPage />} />
