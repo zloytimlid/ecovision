@@ -16,3 +16,7 @@ ROBOFLOW_MIN_CONFIDENCE = 0.40
 LOW_CONFIDENCE_THRESHOLD = 0.60
 
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
+
+# Tests always use SQLite, files on disk and an in-memory cache, whatever .env says.
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}

@@ -131,3 +131,66 @@ npm run dev                      # http://localhost:5173
 и `Authorization: Token <key>`, если пользователь вошёл.
 Ошибки возвращаются в формате `{"error": {"code": "...", "message": "..."}}`.
 Распознавание ограничено 30 запросами в минуту на устройство (`RECOGNIZE_RATE` в `.env`).
+
+## Деплой на Vercel
+
+Из репозитория создаются **два проекта Vercel**: фронтенд (папка `frontend`) и бэкенд (папка `backend`).
+У serverless-функций нет постоянного диска, поэтому бэкенду нужна база Postgres (например,
+[Neon](https://neon.tech) или [Supabase](https://supabase.com), есть бесплатные тарифы). Фото хранятся
+в этой же базе (`MEDIA_STORAGE=db`) и отдаются Django по адресу `/media/...`; счётчики лимитов запросов —
+тоже в базе (таблица `django_cache`), отдельный Redis не нужен.
+
+### 1. База
+
+Создайте базу Postgres и скопируйте строку подключения (`postgresql://…?sslmode=require`).
+Один раз подготовьте её с локального компьютера:
+
+```bash
+cd backend
+venv\Scripts\activate
+set DATABASE_URL=postgresql://...          # macOS/Linux: export DATABASE_URL=...
+python manage.py migrate
+python manage.py createcachetable
+python manage.py seed_waste
+python manage.py createsuperuser
+```
+
+После изменений моделей повторяйте `migrate` так же.
+
+### 2. Бэкенд
+
+Vercel → Add New → Project → этот репозиторий, **Root Directory: `backend`**, Framework Preset: Other.
+Точка входа — `backend/api/index.py`, маршрутизация — `backend/vercel.json`. Переменные окружения:
+
+| Переменная | Значение |
+|---|---|
+| `DJANGO_SECRET_KEY` | длинная случайная строка |
+| `DJANGO_DEBUG` | `False` |
+| `DATABASE_URL` | строка подключения Postgres |
+| `MEDIA_STORAGE` | `db` |
+| `MAX_UPLOAD_MB` | `4` (функции Vercel принимают запросы до 4.5 МБ) |
+| `CORS_ALLOWED_ORIGINS` | адрес фронтенда, например `https://ecovision.vercel.app` |
+| `CORS_ALLOWED_ORIGIN_REGEXES` | необязательно: `^https://ecovision-[a-z0-9-]+\.vercel\.app$` для preview-деплоев |
+| `ROBOFLOW_API_KEY`, `ROBOFLOW_API_URL`, `ROBOFLOW_MODEL_ID`, `ROBOFLOW_MODEL_TYPE` | как в локальном `.env` |
+| `TIME_ZONE` | например `Europe/Moscow` |
+
+Адреса проекта `*.vercel.app` добавляются в `ALLOWED_HOSTS` и `CSRF_TRUSTED_ORIGINS` автоматически;
+для своего домена укажите `DJANGO_ALLOWED_HOSTS` и `CSRF_TRUSTED_ORIGINS`.
+Проверка: `https://<бэкенд>.vercel.app/api/health/`, админка — `/admin/`.
+
+### 3. Фронтенд
+
+Vercel → Add New → Project → этот же репозиторий, **Root Directory: `frontend`**, Framework Preset: Vite.
+Переменные окружения:
+
+| Переменная | Значение |
+|---|---|
+| `VITE_API_URL` | `https://<бэкенд>.vercel.app/api` |
+| `VITE_MAX_UPLOAD_MB` | `4` |
+
+`frontend/vercel.json` перенаправляет все пути на `index.html`, чтобы ссылки вроде `/history` открывались после обновления страницы.
+
+### Ограничения
+
+- Первый запрос после простоя медленнее: холодный старт функции плюс ответ Roboflow.
+- Фото хранятся в базе, поэтому следите за её размером (одно фото после сжатия — 100–300 КБ).

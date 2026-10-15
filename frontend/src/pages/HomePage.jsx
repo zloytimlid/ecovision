@@ -7,7 +7,7 @@ import ErrorMessage from '../components/ErrorMessage.jsx'
 import ImagePreview from '../components/ImagePreview.jsx'
 import Loader from '../components/Loader.jsx'
 import PhotoPicker from '../components/PhotoPicker.jsx'
-import { compressImage, MAX_UPLOAD_BYTES } from '../utils/compressImage.js'
+import { compressImage, MAX_UPLOAD_BYTES, MAX_UPLOAD_MB } from '../utils/compressImage.js'
 
 async function prepareAndRecognize(file) {
   let blob
@@ -17,7 +17,7 @@ async function prepareAndRecognize(file) {
     blob = file // e.g. a format the browser cannot decode; the server will validate it
   }
   if (blob.size > MAX_UPLOAD_BYTES) {
-    throw new Error('Фото слишком большое — максимум 10 МБ.')
+    throw new Error(`Фото слишком большое — максимум ${MAX_UPLOAD_MB} МБ.`)
   }
   return recognize(blob)
 }

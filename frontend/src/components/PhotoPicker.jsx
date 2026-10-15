@@ -1,5 +1,6 @@
 import { Camera, FolderOpen, ImageUp } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { MAX_UPLOAD_MB } from '../utils/compressImage.js'
 import CameraCapture, { isCameraSupported } from './CameraCapture.jsx'
 
 export default function PhotoPicker({ onSelect, disabled }) {
@@ -82,7 +83,7 @@ export default function PhotoPicker({ onSelect, disabled }) {
       >
         <ImageUp className="h-10 w-10" aria-hidden />
         <span className="font-medium text-gray-700">Перетащите фото сюда</span>
-        <span>или нажмите, чтобы выбрать файл · JPEG, PNG, WEBP до 10 МБ</span>
+        <span>или нажмите, чтобы выбрать файл · JPEG, PNG, WEBP до {MAX_UPLOAD_MB} МБ</span>
       </div>
 
       {error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}

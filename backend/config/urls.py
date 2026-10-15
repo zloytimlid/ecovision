@@ -3,6 +3,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from filestore.views import serve as serve_stored_file
+
 admin.site.site_header = "EcoVision — администрирование"
 admin.site.site_title = "EcoVision"
 admin.site.index_title = "Управление справочником и распознаваниями"
@@ -14,5 +16,7 @@ urlpatterns = [
     path("api/", include("recognition.urls")),
 ]
 
-if settings.DEBUG:
+if settings.MEDIA_STORAGE == "db":
+    urlpatterns.append(path(f"{settings.MEDIA_URL.strip('/')}/<path:path>", serve_stored_file, name="media"))
+elif settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

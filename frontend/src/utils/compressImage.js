@@ -1,4 +1,6 @@
-export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+// Must not exceed the backend limit (MAX_UPLOAD_MB); Vercel functions accept up to 4.5 MB.
+export const MAX_UPLOAD_MB = Number(import.meta.env.VITE_MAX_UPLOAD_MB) || 10
+export const MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024
 
 async function loadImage(file) {
   if ('createImageBitmap' in window) {

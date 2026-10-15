@@ -7,6 +7,7 @@ All environment-specific values are read from backend/.env (see .env.example).
 import os
 from pathlib import Path
 
+import dj_database_url
 from corsheaders.defaults import default_headers
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
@@ -52,6 +53,21 @@ if not SECRET_KEY:
     SECRET_KEY = "django-insecure-local-development-only"
 
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
+CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
+
+# Vercel sets these to the deployment / production / branch hostnames.
+ON_VERCEL = bool(os.getenv("VERCEL"))
+for name in ("VERCEL_URL", "VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_BRANCH_URL"):
+    host = env_str(name)
+    if host and host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
+        CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
+
+# Behind an HTTPS proxy (Vercel or any reverse proxy terminating TLS).
+if ON_VERCEL or env_bool("DJANGO_HTTPS", False):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -60,6 +76,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "filestore",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
@@ -70,6 +87,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # Serves the admin's CSS/JS in production (there is no separate web server on Vercel).
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -98,12 +117,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Local development uses SQLite; production sets DATABASE_URL (e.g. Neon / Supabase Postgres).
+DATABASE_URL = env_str("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -114,6 +138,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Throttling counters live in the cache. Serverless instances do not share memory,
+# so with a real database the cache is a DB table (`python manage.py createcachetable`).
+if env_bool("DB_CACHE", bool(DATABASE_URL)):
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+            "LOCATION": "django_cache",
+        }
+    }
+
 # --- Localization -----------------------------------------------------------
 
 LANGUAGE_CODE = "ru"
@@ -123,9 +157,28 @@ USE_TZ = True
 
 # --- Static and media files -------------------------------------------------
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+# Static files are served straight from the apps by WhiteNoise, so no collectstatic
+# step (and no STATIC_ROOT) is needed on deploy.
+STATIC_ROOT = env_str("STATIC_ROOT") or None
+WHITENOISE_USE_FINDERS = True
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+# "files": MEDIA_ROOT on disk (local development);
+# "db": photos are stored in the database and served by Django (servers without a
+# persistent disk, such as Vercel).
+MEDIA_STORAGE = env_str("MEDIA_STORAGE", "files")
+if MEDIA_STORAGE not in ("files", "db"):
+    raise ImproperlyConfigured("MEDIA_STORAGE must be 'files' or 'db'.")
+STORAGES = {
+    "default": {
+        "BACKEND": "filestore.storage.DatabaseStorage"
+        if MEDIA_STORAGE == "db"
+        else "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
 
 MAX_UPLOAD_MB = env_int("MAX_UPLOAD_MB", 10)
 MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024
@@ -133,6 +186,8 @@ MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024
 # --- CORS -------------------------------------------------------------------
 
 CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", "http://localhost:5173")
+# E.g. ^https://ecovision-[a-z0-9-]+\.vercel\.app$ to allow Vercel preview deployments.
+CORS_ALLOWED_ORIGIN_REGEXES = env_list("CORS_ALLOWED_ORIGIN_REGEXES")
 CORS_ALLOW_HEADERS = (*default_headers, "x-client-id")
 
 # --- Django REST Framework --------------------------------------------------
